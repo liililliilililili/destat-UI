@@ -1,15 +1,10 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { createModal } from "@rabby-wallet/rabbykit";
-import { Navigation } from "./components/navigation";
-import { createConfig, http } from "@wagmi/core";
-import { hardhat } from "@wagmi/core/chains";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createConfig, http, WagmiProvider } from "wagmi";
+import { hardhat } from "wagmi/chains";
+// import Navigation from "./components/ui/navigation";
+import "./app.css";
 
 export const config = createConfig({
   chains: [hardhat],
@@ -22,6 +17,8 @@ export const rabbykit = createModal({
   wagmi: config,
 });
 
+const queryClient = new QueryClient();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -32,8 +29,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Navigation />
-        <main className="pt-32 px-10">{children}</main>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        </WagmiProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -42,5 +42,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <div className="flex min-h-screen items-start justify-center px-20 py-20">
+      {/* <Navigation /> */}
+      <Outlet />
+    </div>
+  );
 }
