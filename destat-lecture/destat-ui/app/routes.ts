@@ -2,7 +2,6 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
   index("features/survey/pages/all-survey.tsx"),
-  route("/survey/all", "features/survey/pages/all-survey.tsx"),
   route("/survey/create", "features/survey/pages/create-survey.tsx"),
   route("/survey/:surveyId", "features/survey/pages/survey.tsx"),
   route("/archive/finish", "features/archive/pages/finished-survey.tsx"),
